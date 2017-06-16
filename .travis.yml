@@ -24,8 +24,12 @@ script:
 - docker ps | grep gnkz_nginx_test
 after_success:
 - if [ "$TRAVIS_BRANCH" == "develop" ]; then
-  exit 0;
+    echo "Skipping push";
+    exit 0;
   else
-  exit 1;
+    echo "Pushing image to docker registry"
+    docker login -u gnkz -p $DOCKER_PASS;
+    docker tag $DOCKER_REPO:$COMMIT $DOCKER_REPO:$TAG;
+    docker push $DOCKER_REPO;
   fi;
 
