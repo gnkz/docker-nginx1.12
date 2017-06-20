@@ -23,13 +23,10 @@ script:
 - docker run -d --name gnkz_nginx_test $DOCKER_REPO:$COMMIT
 - docker ps | grep gnkz_nginx_test
 after_success:
-- if [ "$TRAVIS_BRANCH" == "develop" ]; then
-    echo "Skipping push";
-    exit 0;
-  else
-    echo "Pushing image to docker registry";
-    docker login -u gnkz -p $DOCKER_PASS;
-    docker tag $DOCKER_REPO:$COMMIT $DOCKER_REPO:$TAG;
-    docker push $DOCKER_REPO;
-  fi;
-
+- if [ "$TRAVIS_BRANCH" == "develop" ]; then echo "Skipping push"; exit 0; else echo
+  "Pushing image to docker registry"; docker login -u gnkz -p $DOCKER_PASS; docker
+  tag $DOCKER_REPO:$COMMIT $DOCKER_REPO:$TAG; docker push $DOCKER_REPO; fi;
+notifications:
+  hipchat:
+    rooms:
+      secure: v27Cqi7GhsIOFDC7ayUcC5i9J+vhj/ntKLwsppz5HEGQfJ0A/FKTh9tsemkFlLsm5juyTqEL/QsdyTfbe+gNICspxXsssECCTD1DORn5UvEj/AYFWCMwTsC+zmyUY3jeeTMThIMs97SXTmXYCeB22MeF0M8eMEH/sA+vZXXJYWNz0gMuRfyNT3oQtHzcyD6783O2VOuwBzJv7byGrmMBp+Mt0g697bZzh0ADitzi5W/8Oyps/hmQCvdiClXHhinP2bZLXDjEP5i101SJW5XmmwifiEGCA5J0E8AGMEeBhD46kWjruRXgR5gjy6NIwiQ0ri2VKQbSIbRxxnPzcNtsjgq/q/UoNnDY1c7kesZ2Fo2+oGfdL6MtdVYikcVNUUA52yPrdFditcIB/HQanBtiQbUeNbSn56PIuI53BJ31egA5oe9g3GSTDUQn+IchQKsRDjZvd0qwayZ2fY0gmbk6PareIzEpDuwzxSEYP3jn/ldgON+mjldxMCCRz6zYP9rG9fPtXp2dEds54mPewQPWpY3peSRh2CxbRMXDDsgP6O8WOno8eYylnKUDWL4KYKwO9opQjxhy2GKr6K10tvXwXE6/gxXFx4LX14EPy9iO7K02MexPAGw0No1k4+9IgCFapd95mASDQI08Yn5jpCYhLbai7gZJ71izDpgKhbs/f5k=
