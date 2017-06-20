@@ -3,7 +3,6 @@ services:
 - docker
 branches:
   except:
-  - develop
   - "/^feature\\/.*$/"
   - "/^release\\/.*$/"
   - "/^support\\/.*$/"
@@ -16,11 +15,21 @@ env:
   - GOOS: linux
   - GOARCH: amd64
   - secure: R8NEsMsrB9R45gjKJRoO82G2VI7OHBxZfXMNlUaixJc+fWAfoq5Tk6L2Gj6S35gGiPipMWvEQAJ06QhZXdki9W9jGNQemM7TM2ENp5tDkMM2ntwxERBPewUoFixMU8U6UmyJOAchMNOSDPAAR3jws5maE5OwRLQBB3zyEQCEdQXeTlCmDet8C4gxdyfsHPBxzaFGp1qyq1nEeZQLHO43uFNI8anuyiQS22/9J+z7sc68g5MwuT9nlMw0U61FjOX4TJ6RXdmn7DaKgshb2Hmt590KxK7CJxgNDi/DVUom5Q1ycektcc7abFkeQLEuCLUnxMo4EwNzMBDshpkPKJEwp2UK/VXlX2H8DNNKChqcZESIZNe0xSPDRWlxX3Eo8PqjEKLLhBZOzoKCtxHKP5SBVZHiXZJ5dC3tccPgT3Lxhx0EaWcTRQQGvtxT4f1mdfzyl2XWfowxjKcS50jLIEDrSrnI3S7vQU0K1jAR08rR3GTxcRUYTRvlc1ScGu0LC+S8TTBJxhe5gqxkELKorpKPW4I2gQrvb8x42o0YoMIaO/UcmYLpTvL5RdS/EWzk+Aik0Kzzv84DNHLjQMlMcmwvPiFWoQOTzIDUpN2jRMaWGhXJOhe+8shtI6jT1wgy33GiWGlCEK3vYnOHuz+Nq9rC8QX3UOP3S/U49aAW+SbNjGY=
-script:
+install:
 - export TAG=`if [ "$TRAVIS_BRANCH" == "master" ]; then echo "latest"; else echo $TRAVIS_BRANCH;
   fi`
 - docker build -t $DOCKER_REPO:$COMMIT -f Dockerfile .
+script:
+- docker run -d --name gnkz_nginx_test $DOCKER_REPO:$COMMIT
+- docker ps | grep gnkz_nginx_test
 after_success:
-- docker login -u gnkz -p $DOCKER_PASS
-- docker tag $DOCKER_REPO:$COMMIT $DOCKER_REPO:$TAG
-- docker push $DOCKER_REPO
+- if [ "$TRAVIS_BRANCH" == "develop" ]; then
+    echo "Skipping push";
+    exit 0;
+  else
+    echo "Pushing image to docker registry"
+    docker login -u gnkz -p $DOCKER_PASS;
+    docker tag $DOCKER_REPO:$COMMIT $DOCKER_REPO:$TAG;
+    docker push $DOCKER_REPO;
+  fi;
+
