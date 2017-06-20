@@ -27,7 +27,7 @@ after_success:
     echo "Skipping push";
     exit 0;
   else
-    echo "Pushing image to docker registry"
+    echo "Pushing image to docker registry";
     docker login -u gnkz -p $DOCKER_PASS;
     docker tag $DOCKER_REPO:$COMMIT $DOCKER_REPO:$TAG;
     docker push $DOCKER_REPO;
