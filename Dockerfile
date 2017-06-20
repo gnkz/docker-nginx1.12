@@ -9,8 +9,8 @@ RUN apk --no-cache add nginx=$NGINX_VERSION && \
     sed -i "1s/^/daemon off;\n/" /etc/nginx/nginx.conf && \
     mkdir -p /run/nginx && \
     chmod +x /usr/bin/entry && \
-    touch /var/log/nginx/access.log && \
-    touch /var/log/nginx/error.log
+    ln -sf /dev/stdout /var/log/nginx/access.log && \
+	ln -sf /dev/stderr /var/log/nginx/error.log
 
 EXPOSE 80
 EXPOSE 443
