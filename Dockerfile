@@ -1,7 +1,7 @@
 FROM gnkz/base-dev:0.1.1
 MAINTAINER gnkz.dev@gmail.com
 
-ENV NGINX_VERSION 1.12.0-r2
+ENV NGINX_VERSION 1.12.1-r1
 
 COPY entry.sh /usr/bin/entry
 
